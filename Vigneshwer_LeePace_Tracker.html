@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vigneshwer — Lee Pace Foundation Program</title>
+<style>
+:root{
+  --bg:#0a0b0d;--s1:#111316;--s2:#181b1e;--s3:#20242a;
+  --border:rgba(255,255,255,0.055);--border2:rgba(255,255,255,0.10);
+  --text:#e9e6e1;--muted:#6e6a63;--faint:#2e2c29;
+  --gold:#c9a96e;--gold2:#f0d080;--gold-dim:rgba(201,169,110,0.10);
+  --green:#4aad7a;--green-dim:rgba(74,173,122,0.10);
+  --blue:#5f8ec9;--blue-dim:rgba(95,142,201,0.10);
+  --red:#c05050;--purple:#8b7cc8;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:13px;line-height:1.6;min-height:100vh;}
+
+/* TOPBAR */
+#topbar{position:sticky;top:0;z-index:200;background:rgba(10,11,13,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:10px;padding:0 1.5rem;height:52px;flex-wrap:wrap;}
+.logo{font-weight:700;font-size:12px;letter-spacing:0.13em;text-transform:uppercase;color:var(--text);white-space:nowrap;}
+.logo em{color:var(--gold);font-style:normal;}
+#tabBar{display:flex;gap:2px;flex:1;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+#tabBar::-webkit-scrollbar{display:none;}
+.tab-btn{padding:4px 11px;border-radius:18px;font-weight:600;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;border:1px solid transparent;background:transparent;color:var(--muted);cursor:pointer;transition:all 0.18s;white-space:nowrap;font-family:inherit;}
+.tab-btn:hover{color:var(--text);border-color:var(--border2);}
+.tab-btn.active{color:var(--gold);border-color:rgba(201,169,110,0.3);background:var(--gold-dim);}
+.right-ctrl{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0;}
+.ctrl-label{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:0.07em;text-transform:uppercase;}
+select.ctrl{background:var(--s2);border:1px solid var(--border2);color:var(--text);font-size:11px;padding:3px 8px;border-radius:6px;cursor:pointer;font-family:inherit;}
+
+/* VIEWS */
+.view{display:none;max-width:1080px;margin:0 auto;padding:1.75rem 1.5rem 5rem;}
+.view.active{display:block;}
+
+/* PHASE TABS */
+.phase-tabs{display:flex;gap:6px;margin-bottom:1.5rem;flex-wrap:wrap;}
+.phase-btn{padding:5px 14px;border-radius:6px;font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;transition:all 0.18s;font-family:inherit;}
+.phase-btn.active{color:var(--bg);background:var(--gold);border-color:var(--gold);}
+.phase-desc{background:var(--s1);border:1px solid var(--border2);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.75rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;}
+@media(max-width:580px){.phase-desc{grid-template-columns:1fr 1fr;}}
+.pd-item .pd-label{font-size:9px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
+.pd-item .pd-val{font-size:13px;font-weight:700;color:var(--gold);}
+.pd-item .pd-sub{font-size:10px;color:var(--muted);margin-top:1px;}
+
+/* DAY SECTION */
+.day-section{margin-bottom:2.25rem;}
+.day-hdr{display:flex;align-items:center;gap:10px;margin-bottom:0.85rem;padding-bottom:0.6rem;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.day-lbl{font-weight:800;font-size:22px;letter-spacing:-0.02em;line-height:1;}
+.day-focus-txt{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:0.07em;text-transform:uppercase;}
+.tags{display:flex;gap:4px;align-items:center;}
+.tag{font-size:9px;font-weight:700;padding:2px 7px;border-radius:9px;letter-spacing:0.04em;text-transform:uppercase;}
+.tg-strength{background:var(--blue-dim);color:var(--blue);}
+.tg-core{background:var(--gold-dim);color:var(--gold);}
+.tg-cardio{background:var(--green-dim);color:var(--green);}
+.day-prog{margin-left:auto;font-size:10px;color:var(--muted);font-weight:600;}
+.done-n{color:var(--green);}
+
+/* BLOCK */
+.block-hdr{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 0 3px;margin-top:6px;display:flex;align-items:center;gap:8px;}
+.block-hdr::after{content:'';flex:1;height:1px;background:var(--border);}
+.bh-strength{color:var(--blue);}
+.bh-core{color:var(--gold);}
+.bh-cardio{color:var(--green);}
+
+/* CARD */
+.xcard{background:var(--s1);border:1px solid var(--border);border-radius:9px;margin-bottom:5px;overflow:hidden;transition:border-color 0.18s;}
+.xcard:hover{border-color:var(--border2);}
+.xcard.done{border-color:rgba(74,173,122,0.2);background:rgba(74,173,122,0.025);}
+.xcard.core-card{border-left:2px solid rgba(201,169,110,0.25);}
+.xcard.core-card.done{border-left-color:rgba(201,169,110,0.6);}
+.xcard.priority-card{border-left:2px solid rgba(95,142,201,0.4);}
+
+.ctop{display:grid;grid-template-columns:34px 1fr auto auto;align-items:center;gap:10px;padding:9px 12px;cursor:pointer;}
+@media(max-width:480px){.ctop{grid-template-columns:34px 1fr;}.xmeta,.xbtn{display:none;}}
+.chk{width:25px;height:25px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;transition:all 0.18s;flex-shrink:0;background:transparent;cursor:pointer;}
+.chk svg{opacity:0;transition:opacity 0.18s;}
+.xcard.done .chk{background:var(--green);border-color:var(--green);}
+.xcard.done .chk svg{opacity:1;}
+.core-card .chk{border-color:rgba(201,169,110,0.3);}
+.core-card.done .chk{background:var(--gold);border-color:var(--gold);}
+
+.xinfo{min-width:0;}
+.xname{font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.xcard.done .xname{color:var(--muted);text-decoration:line-through;}
+.xnote{font-size:10px;color:var(--muted);margin-top:1px;font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.priority-badge{display:inline-block;font-size:8px;font-weight:700;padding:1px 6px;border-radius:6px;background:var(--blue-dim);color:var(--blue);letter-spacing:0.05em;text-transform:uppercase;margin-left:5px;vertical-align:middle;}
+
+.xmeta{display:flex;gap:5px;flex-shrink:0;}
+.mp{font-weight:600;font-size:10px;padding:2px 8px;border-radius:18px;white-space:nowrap;}
+.mp-s{color:var(--blue);background:var(--blue-dim);}
+.mp-r{color:var(--gold);background:var(--gold-dim);}
+.mp-c{color:var(--green);background:var(--green-dim);}
+.xbtn{background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--muted);cursor:pointer;padding:3px 9px;font-size:10px;transition:all 0.18s;white-space:nowrap;font-family:inherit;}
+.xbtn:hover{border-color:var(--border2);color:var(--text);}
+
+/* BODY */
+.cbody{display:none;border-top:1px solid var(--border);padding:13px 12px;gap:16px;}
+.cbody.open{display:grid;grid-template-columns:170px 1fr;}
+@media(max-width:560px){.cbody.open{grid-template-columns:1fr;}}
+
+.demo-panel{display:flex;flex-direction:column;gap:6px;}
+.gif-box{width:170px;height:128px;background:var(--s2);border-radius:7px;border:1px solid var(--border2);overflow:hidden;}
+.gif-box a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;width:100%;height:100%;text-decoration:none;color:var(--muted);font-size:10px;text-align:center;padding:10px;transition:background 0.18s;}
+.gif-box a:hover{background:rgba(255,255,255,0.02);}
+.play-ring{width:32px;height:32px;border-radius:50%;background:var(--gold-dim);border:1px solid rgba(201,169,110,0.25);display:flex;align-items:center;justify-content:center;}
+.demo-lbl{color:var(--gold);font-weight:600;font-size:11px;}
+.demo-sub{font-size:9px;color:var(--faint);}
+
+.log-panel{display:flex;flex-direction:column;gap:7px;}
+.log-wlbl{font-size:9px;font-weight:700;color:var(--gold);letter-spacing:0.09em;text-transform:uppercase;margin-bottom:0px;}
+.sets-col{display:flex;flex-direction:column;gap:4px;}
+.srow{display:grid;grid-template-columns:22px 1fr 1fr 24px;align-items:center;gap:5px;}
+.srow.cardio-row{grid-template-columns:22px 1fr 24px;}
+.snum{font-weight:700;font-size:9px;color:var(--faint);text-align:right;}
+.sinput{background:var(--s2);border:1px solid var(--border);border-radius:5px;padding:5px 8px;color:var(--text);font-size:11px;width:100%;outline:none;font-family:inherit;transition:border-color 0.18s;}
+.sinput:focus{border-color:var(--gold);}
+.sinput::placeholder{color:var(--faint);}
+.sdone{width:22px;height:22px;border-radius:50%;border:1px solid var(--border2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.18s;flex-shrink:0;}
+.sdone.logged{background:var(--green);border-color:var(--green);}
+.core-card .sinput:focus{border-color:var(--gold);}
+.core-card .sdone.logged{background:var(--gold);border-color:var(--gold);}
+
+.hist-row{margin-top:6px;}
+.hist-lbl{font-size:9px;font-weight:700;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;}
+.hgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;}
+.hcell{background:var(--s2);border:1px solid var(--border);border-radius:5px;padding:4px 6px;text-align:center;}
+.hcell .hw{font-size:8px;color:var(--muted);margin-bottom:1px;font-weight:600;}
+.hcell .hv{font-size:10px;color:var(--text);}
+.hcell.hd{border-color:rgba(201,169,110,0.22);}
+
+/* OVERLOAD NOTES PER PHASE */
+.overload-box{background:var(--s1);border:1px solid var(--border2);border-left:3px solid var(--blue);border-radius:8px;padding:10px 14px;margin-bottom:1.5rem;font-size:11px;color:var(--muted);line-height:1.6;}
+.overload-box strong{color:var(--blue);font-size:10px;letter-spacing:0.07em;text-transform:uppercase;}
+
+/* NUTRITION VIEW */
+.nut-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+@media(max-width:560px){.nut-grid{grid-template-columns:1fr;}}
+.nut-card{background:var(--s1);border:1px solid var(--border2);border-radius:10px;padding:1.1rem 1.25rem;}
+.nut-card h3{font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.nut-row{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--border);}
+.nut-row:last-child{border-bottom:none;}
+.nr-label{font-size:11px;color:var(--muted);}
+.nr-val{font-size:13px;font-weight:700;color:var(--text);}
+.nr-val.gold{color:var(--gold);}
+.nut-tip{background:var(--s1);border:1px solid var(--border2);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem;}
+.nut-tip h3{font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.tip-list{display:flex;flex-direction:column;gap:6px;}
+.tip-item{display:flex;gap:10px;font-size:11px;color:var(--muted);line-height:1.5;}
+.tip-dot{color:var(--gold);flex-shrink:0;margin-top:1px;}
+
+/* PROGRESS VIEW */
+.prog-view-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+@media(max-width:580px){.prog-view-grid{grid-template-columns:1fr 1fr;}}
+.stat-card{background:var(--s1);border:1px solid var(--border2);border-radius:10px;padding:1rem 1.1rem;}
+.stat-card .sc-label{font-size:9px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.stat-card .sc-val{font-size:20px;font-weight:800;color:var(--gold);}
+.stat-card .sc-sub{font-size:10px;color:var(--muted);margin-top:2px;}
+.milestone-list{display:flex;flex-direction:column;gap:6px;margin-bottom:1.5rem;}
+.milestone{background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:12px;}
+.ms-phase{font-size:10px;font-weight:700;color:var(--gold);letter-spacing:0.07em;text-transform:uppercase;width:60px;flex-shrink:0;}
+.ms-text{font-size:11px;color:var(--muted);flex:1;}
+.ms-check{width:20px;height:20px;border-radius:50%;border:1px solid var(--border2);flex-shrink:0;}
+
+/* PHASE BAR */
+.phase-bar{background:var(--s1);border:1px solid var(--border2);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem;}
+.phase-bar h3{font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+.pb-track{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;}
+.pb-seg{border-radius:6px;padding:8px 10px;text-align:center;}
+.pb-seg .pbs-lbl{font-size:9px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:2px;}
+.pb-seg .pbs-name{font-size:11px;font-weight:700;}
+.pb-seg .pbs-goal{font-size:10px;margin-top:1px;}
+.pb-p1{background:rgba(95,142,201,0.1);border:1px solid rgba(95,142,201,0.2);}
+.pb-p1 .pbs-lbl,.pb-p1 .pbs-name{color:var(--blue);}
+.pb-p1 .pbs-goal{color:var(--muted);}
+.pb-p2{background:rgba(201,169,110,0.1);border:1px solid rgba(201,169,110,0.2);}
+.pb-p2 .pbs-lbl,.pb-p2 .pbs-name{color:var(--gold);}
+.pb-p2 .pbs-goal{color:var(--muted);}
+.pb-p3{background:rgba(74,173,122,0.1);border:1px solid rgba(74,173,122,0.2);}
+.pb-p3 .pbs-lbl,.pb-p3 .pbs-name{color:var(--green);}
+.pb-p3 .pbs-goal{color:var(--muted);}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--s3);border-radius:2px;}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <div class="logo">Vigneshwer <em>·</em> Lee Pace Program</div>
+  <div id="tabBar">
+    <button class="tab-btn active" onclick="showView('workout')">Workout</button>
+    <button class="tab-btn" onclick="showView('nutrition')">Nutrition</button>
+    <button class="tab-btn" onclick="showView('progress')">Progress</button>
+  </div>
+  <div class="right-ctrl">
+    <span class="ctrl-label">Phase</span>
+    <select class="ctrl" id="phaseSel" onchange="switchPhase(this.value)">
+      <option value="1">1 — Foundation</option>
+      <option value="2">2 — Definition</option>
+      <option value="3">3 — Peak</option>
+    </select>
+    <span class="ctrl-label">Wk</span>
+    <select class="ctrl" id="weekSel" onchange="switchWeek(this.value)">
+      <option>1</option><option>2</option><option>3</option><option>4</option>
+      <option>5</option><option>6</option><option>7</option><option>8</option>
+    </select>
+  </div>
+</div>
+
+<!-- WORKOUT VIEW -->
+<div class="view active" id="view-workout">
+  <div class="phase-tabs">
+    <button class="phase-btn active" onclick="switchPhase(1)" id="pbtn-1">Phase 1 — Foundation (Wk 1–8)</button>
+    <button class="phase-btn" onclick="switchPhase(2)" id="pbtn-2">Phase 2 — Definition (Wk 9–16)</button>
+    <button class="phase-btn" onclick="switchPhase(3)" id="pbtn-3">Phase 3 — Peak (Wk 17–24)</button>
+  </div>
+  <div id="phase-desc-box"></div>
+  <div id="overload-box"></div>
+  <div id="workout-content"></div>
+</div>
+
+<!-- NUTRITION VIEW -->
+<div class="view" id="view-nutrition">
+  <div class="nut-grid">
+    <div class="nut-card">
+      <h3>Daily Targets (Recomposition)</h3>
+      <div class="nut-row"><span class="nr-label">Calories</span><span class="nr-val gold">TDEE − 250</span></div>
+      <div class="nut-row"><span class="nr-label">Protein</span><span class="nr-val gold">1g per lb bodyweight</span></div>
+      <div class="nut-row"><span class="nr-label">Carbs</span><span class="nr-val">Around workouts only</span></div>
+      <div class="nut-row"><span class="nr-label">Fats</span><span class="nr-val">0.4g per lb bodyweight</span></div>
+      <div class="nut-row"><span class="nr-label">Water</span><span class="nr-val">3–4 litres daily</span></div>
+      <div class="nut-row"><span class="nr-label">Meal timing</span><span class="nr-val">Protein every 3–4 hrs</span></div>
+    </div>
+    <div class="nut-card">
+      <h3>Phase-by-Phase Nutrition Shift</h3>
+      <div class="nut-row"><span class="nr-label">Phase 1 (Wk 1–8)</span><span class="nr-val">TDEE − 300</span></div>
+      <div class="nut-row"><span class="nr-label">Phase 2 (Wk 9–16)</span><span class="nr-val">TDEE − 200</span></div>
+      <div class="nut-row"><span class="nr-label">Phase 3 (Wk 17–24)</span><span class="nr-val">TDEE − 100</span></div>
+      <div class="nut-row"><span class="nr-label">Target body fat</span><span class="nr-val gold">10–13%</span></div>
+      <div class="nut-row"><span class="nr-label">Protein sources</span><span class="nr-val">Chicken, eggs, fish, whey</span></div>
+      <div class="nut-row"><span class="nr-label">Cheat meals</span><span class="nr-val">1 per week max</span></div>
+    </div>
+  </div>
+  <div class="nut-tip">
+    <h3>Recomposition Rules — Non-Negotiable</h3>
+    <div class="tip-list">
+      <div class="tip-item"><span class="tip-dot">◈</span><span>Eat protein within 30 min of waking and within 30 min post-workout — muscle protein synthesis window is real</span></div>
+      <div class="tip-item"><span class="tip-dot">◈</span><span>Carbs before training (rice, oats, banana) and immediately after — this is when your body partitions them to muscle, not fat</span></div>
+      <div class="tip-item"><span class="tip-dot">◈</span><span>No carbs after 7pm except on training days — evening insulin sensitivity drops significantly</span></div>
+      <div class="tip-item"><span class="tip-dot">◈</span><span>Sleep 7–9 hours — GH peaks in deep sleep. This is when your body actually builds the muscle you trained. This is not optional.</span></div>
+      <div class="tip-item"><span class="tip-dot">◈</span><span>Creatine monohydrate 5g daily — the only supplement with unambiguous evidence for lean muscle gain</span></div>
+      <div class="tip-item"><span class="tip-dot">◈</span><span>Vegetables at every meal for satiety and micronutrients — you're in a deficit, micronutrient density matters</span></div>
+      <div class="tip-item"><span class="tip-dot">◈</span><span>Track everything for the first 4 weeks minimum — people who track calories lose 2–3x more fat than those who estimate</span></div>
+      <div class="tip-item"><span class="tip-dot">◈</span><span>Reduce deficit in Phase 3 to TDEE −100 — you are lean by then and need fuel to reveal the final layer of definition</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PROGRESS VIEW -->
+<div class="view" id="view-progress">
+  <div class="phase-bar">
+    <h3>Your 24-Week Transformation Arc</h3>
+    <div class="pb-track">
+      <div class="pb-seg pb-p1"><div class="pbs-lbl">Phase 1 · Wk 1–8</div><div class="pbs-name">Foundation</div><div class="pbs-goal">Strip fat, build base, establish core habit</div></div>
+      <div class="pb-seg pb-p2"><div class="pbs-lbl">Phase 2 · Wk 9–16</div><div class="pbs-name">Definition</div><div class="pbs-goal">V-taper emerges, abs visible, shoulders cap</div></div>
+      <div class="pb-seg pb-p3"><div class="pbs-lbl">Phase 3 · Wk 17–24</div><div class="pbs-name">Peak</div><div class="pbs-goal">Lee Pace physique — serratus, obliques, full shape</div></div>
+    </div>
+  </div>
+  <div class="prog-view-grid">
+    <div class="stat-card"><div class="sc-label">Program Duration</div><div class="sc-val">24 wks</div><div class="sc-sub">6 months total</div></div>
+    <div class="stat-card"><div class="sc-label">Training Days/Week</div><div class="sc-val">6 days</div><div class="sc-sub">Sunday full rest</div></div>
+    <div class="stat-card"><div class="sc-label">Core Sessions</div><div class="sc-val">Every day</div><div class="sc-sub">3 exercises per session</div></div>
+    <div class="stat-card"><div class="sc-label">Cardio Sessions</div><div class="sc-val">3/week</div><div class="sc-sub">LISS + HIIT mixed</div></div>
+    <div class="stat-card"><div class="sc-label">Serratus Work</div><div class="sc-val">2x/week</div><div class="sc-sub">Tue + Sat</div></div>
+    <div class="stat-card"><div class="sc-label">Target Body Fat</div><div class="sc-val">10–13%</div><div class="sc-sub">From recomp deficit</div></div>
+  </div>
+  <div class="milestone-list">
+    <div style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:0.09em;text-transform:uppercase;margin-bottom:4px;">Key Milestones</div>
+    <div class="milestone"><span class="ms-phase">Wk 2–3</span><span class="ms-text">Bloating gone, first visible changes in face and waist. Energy stabilises on new diet.</span></div>
+    <div class="milestone"><span class="ms-phase">Wk 4–6</span><span class="ms-text">Clothes fit differently. Shoulders appear broader relative to waist. Core becomes functional.</span></div>
+    <div class="milestone"><span class="ms-phase">Wk 8</span><span class="ms-text">Phase 1 complete. Upper abs visible in good lighting. V-taper starting to appear.</span></div>
+    <div class="milestone"><span class="ms-phase">Wk 10–12</span><span class="ms-text">Lower abs emerging. Shoulder cap defined. Lat width noticeable in photos.</span></div>
+    <div class="milestone"><span class="ms-phase">Wk 16</span><span class="ms-text">Phase 2 complete. Full six-pack visible. Serratus lines appearing. People notice.</span></div>
+    <div class="milestone"><span class="ms-phase">Wk 20–22</span><span class="ms-text">Oblique lines, serratus fully visible. Arms have shape and definition. The Foundation look.</span></div>
+    <div class="milestone"><span class="ms-phase">Wk 24</span><span class="ms-text">Peak condition. Lee Pace Foundation physique achieved. Lean, commanding, athletic.</span></div>
+  </div>
+  <div class="nut-tip">
+    <h3>Weekly Check-In Protocol</h3>
+    <div class="tip-list">
+      <div class="tip-item"><span class="tip-dot">◈</span><span>Weigh yourself every Monday morning, fasted, after using the bathroom — same conditions every time</span></div>
+      <div class="tip-item"><span class="tip-dot">◈</span><span>Take a front, side and back photo every 4 weeks in the same lighting — progress photos lie less than the scale</span></div>
+      <div class="tip-item"><span class="tip-dot">◈</span><span>If weight hasn't dropped in 2 consecutive weeks, reduce calories by 100 or add one cardio session</span></div>
+      <div class="tip-item"><span class="tip-dot">◈</span><span>If strength is dropping significantly, you are in too large a deficit — eat more protein and reduce the calorie cut slightly</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var currentPhase=1, currentWeek=1;
+var logData={}, cardDone={};
+
+var PHASES={
+  1:{
+    name:"Foundation", weeks:"1–8",
+    goal:"Build the base. Strip fat, establish the V-taper foundation, make core work a daily habit.",
+    reps:"10–15 reps / 60% of max weight / 60–90 sec rest",
+    cardio:"2x LISS per week (20–25 min incline walk)",
+    overload:"Add 1 rep per set each week. When you hit the top of the rep range for all sets, increase weight by 2.5 kg next week."
+  },
+  2:{
+    name:"Definition", weeks:"9–16",
+    goal:"Reveal the shape. V-taper emerges, abs become visible, serratus lines develop.",
+    reps:"12–20 reps / 55% of max / 45–60 sec rest (more metabolic)",
+    cardio:"3x cardio per week — 2x LISS + 1x HIIT intervals",
+    overload:"Increase reps before weight. Drop-sets on final set of each exercise. Superset core with strength work."
+  },
+  3:{
+    name:"Peak", weeks:"17–24",
+    goal:"Final polish. Full serratus, oblique lines, maximum definition. The Lee Pace Foundation look.",
+    reps:"15–25 reps / 50% of max / 30–45 sec rest / giant sets",
+    cardio:"3x cardio — 1x LISS + 2x HIIT. Fasted cardio optional on non-training days.",
+    overload:"Giant sets (3 exercises back-to-back with no rest). Time under tension focus — 4 sec eccentric on all movements."
+  }
+};
+
+var DAYS=[
+  {
+    day:"Mon", focus:"Chest, Triceps + Core", tags:["strength","core"],
+    blocks:[
+      {label:"Chest & Triceps",type:"strength",exercises:[
+        {name:"Chest Press Machine",      priority:true,  sets:4,reps:{1:"8-10",2:"10-12",3:"12-15"},  note:"Primary chest strength — V-taper requires chest width not just pec mass", yt:"chest+press+machine+exercise+tutorial"},
+        {name:"Incline DB Press",                         sets:4,reps:{1:"10-12",2:"12-15",3:"15-20"}, note:"Upper chest fills out the shoulder-to-chest line — critical for Foundation look", yt:"incline+dumbbell+press+exercise+tutorial"},
+        {name:"Cable Fly Low to High",                    sets:3,reps:{1:"12-15",2:"15-18",3:"18-20"}, note:"Full pec stretch and squeeze — chest detail and definition", yt:"cable+fly+low+to+high+chest+exercise"},
+        {name:"Pec Deck Machine",                         sets:3,reps:{1:"12-15",2:"15-20",3:"20"},    note:"Inner chest isolation — creates the chest line visible under a shirt", yt:"pec+deck+machine+fly+exercise"},
+        {name:"Tricep Pushdown Rope",                     sets:3,reps:{1:"12-15",2:"15-20",3:"20-25"}, note:"Rope allows full wrist supination — horseshoe tricep shape", yt:"tricep+rope+pushdown+how+to"},
+        {name:"Overhead Cable Tricep Ext",                sets:3,reps:{1:"12-15",2:"12-15",3:"15-20"}, note:"Long-head emphasis — builds the part of the arm that shows from the front", yt:"overhead+cable+tricep+extension+tutorial"},
+      ]},
+      {label:"Core Circuit",type:"core",exercises:[
+        {name:"Cable Crunch",                             sets:3,reps:{1:"15-20",2:"20",3:"20-25"},    note:"Rope at forehead, crunch hard — upper abs are your first visible milestone", yt:"cable+crunch+abs+how+to"},
+        {name:"Hanging Leg Raise",                        sets:3,reps:{1:"10-12",2:"12-15",3:"15-20"}, note:"Full leg to 90° — lower abs and hip flexors, zero swing", yt:"hanging+leg+raise+abs+exercise"},
+        {name:"Side Plank Hold",                          sets:3,reps:{1:"30 sec",2:"40 sec",3:"50 sec"},note:"Both sides — oblique stability essential for the athletic taper", yt:"side+plank+exercise+how+to"},
+      ]},
+    ]
+  },
+  {
+    day:"Tue", focus:"Back + Lat Width + Serratus + Core", tags:["strength","core"],
+    blocks:[
+      {label:"Back — Lat Width Priority",type:"strength",exercises:[
+        {name:"Wide-Grip Lat Pulldown",  priority:true,  sets:5,reps:{1:"8-10",2:"10-12",3:"12-15"},  note:"PRIORITY — lats are the engine of your V-taper. 5 sets, every phase, always first", yt:"wide+grip+lat+pulldown+how+to"},
+        {name:"Straight-Arm Pulldown",   priority:true,  sets:4,reps:{1:"12-15",2:"15-18",3:"18-20"}, note:"Pure lat isolation — no bicep involvement. The key lat-width builder", yt:"straight+arm+cable+pulldown+lat+exercise"},
+        {name:"Seated Cable Row Close",                   sets:4,reps:{1:"10-12",2:"12-15",3:"15-18"}, note:"Mid-back thickness — creates the visual depth that makes the back look 3D", yt:"seated+cable+row+close+grip+tutorial"},
+        {name:"Machine Row Chest Supp",                   sets:3,reps:{1:"10-12",2:"12-15",3:"15-18"}, note:"Chest on pad — full back contraction with zero spinal load", yt:"chest+supported+machine+row+exercise"},
+        {name:"EZ Bar Curl",                              sets:3,reps:{1:"10-12",2:"12-15",3:"15"},    note:"Controlled — no swinging. Supinate fully at peak contraction", yt:"ez+bar+bicep+curl+how+to"},
+        {name:"Incline DB Curl",                          sets:3,reps:{1:"10-12",2:"12-15",3:"15"},    note:"Full long-head stretch — builds arm length and the bicep peak visible from the side", yt:"incline+dumbbell+bicep+curl+tutorial"},
+      ]},
+      {label:"Serratus + Core",type:"core",exercises:[
+        {name:"Serratus Crunch (Cable)",priority:true,   sets:3,reps:{1:"12-15",2:"15-20",3:"20"},    note:"SERRATUS — arms overhead, crunch and protract shoulders forward. The finger muscle under your pec", yt:"serratus+anterior+exercise+cable+crunch"},
+        {name:"Ab Wheel Rollout",                         sets:3,reps:{1:"8-10",2:"10-12",3:"12-15"},  note:"Full extension — serratus and lats fire to control the rollout", yt:"ab+wheel+rollout+exercise+how+to"},
+        {name:"Bicycle Crunch",                           sets:3,reps:{1:"20",2:"24",3:"30"},           note:"Slow deliberate rotation — oblique and intercostal definition", yt:"bicycle+crunch+abs+exercise+proper+form"},
+      ]},
+    ]
+  },
+  {
+    day:"Wed", focus:"Shoulders + Traps + Cardio", tags:["strength","cardio"],
+    blocks:[
+      {label:"Shoulders — Width Priority",type:"strength",exercises:[
+        {name:"Shoulder Press Machine",  priority:true,  sets:4,reps:{1:"10-12",2:"12-15",3:"15-20"}, note:"Foundation of the shoulder cap — back supported, full range every rep", yt:"seated+shoulder+press+machine+how+to"},
+        {name:"DB Lateral Raise",        priority:true,  sets:5,reps:{1:"15-20",2:"18-20",3:"20-25"}, note:"PRIORITY — side delts create width and the shoulder cap. 5 sets every phase", yt:"dumbbell+lateral+raise+shoulder+tutorial"},
+        {name:"Cable Lateral Raise",                      sets:3,reps:{1:"15",2:"18",3:"20"},           note:"Constant tension version — alternate arms, feel the delt burn through full range", yt:"cable+lateral+raise+shoulder+exercise"},
+        {name:"Face Pull Cable",         priority:true,  sets:4,reps:{1:"15",2:"15-18",3:"20"},         note:"Rear delt + external rotation — rounds out the shoulder and protects the joint", yt:"cable+face+pull+exercise+how+to"},
+        {name:"Machine Shrug",                            sets:3,reps:{1:"12-15",2:"15",3:"15-20"},     note:"Trap definition — hold at top. Traps frame the neck and add authority to the look", yt:"machine+shrug+traps+exercise"},
+        {name:"Rear Delt Fly Machine",                    sets:3,reps:{1:"15",2:"18",3:"20"},            note:"Arms parallel — rear delts create the 3D shoulder when seen from the side", yt:"rear+delt+fly+machine+exercise+how+to"},
+      ]},
+      {label:"Cardio",type:"cardio",exercises:[
+        {name:"Incline Treadmill Walk",                   sets:1,reps:{1:"25 min",2:"25 min",3:"20 min"},note:"4% incline, 5.5–6 km/h — LISS burns fat without cortisol spike that eats muscle", yt:"incline+treadmill+walk+fat+loss"},
+      ]},
+    ]
+  },
+  {
+    day:"Thu", focus:"Arms, Chest Volume + Core", tags:["strength","core"],
+    blocks:[
+      {label:"Chest & Arms Volume",type:"strength",exercises:[
+        {name:"Flat DB Press",                            sets:4,reps:{1:"12-15",2:"15-18",3:"18-20"}, note:"Volume day — higher reps for chest detail, not size", yt:"flat+dumbbell+bench+press+how+to"},
+        {name:"Cable Crossover Mid",                      sets:3,reps:{1:"15",2:"18",3:"20"},           note:"Full pec stretch to full contraction — chest definition finisher", yt:"cable+crossover+chest+exercise+tutorial"},
+        {name:"Preacher Curl Machine",                    sets:4,reps:{1:"10-12",2:"12-15",3:"15"},     note:"Upper arm fully locked — strict curl for peak bicep development", yt:"preacher+curl+machine+bicep+exercise"},
+        {name:"Hammer Curl Alternating",                  sets:3,reps:{1:"12 each",2:"12 each",3:"15 each"},note:"Brachialis and brachioradialis — adds thickness and definition to the arm", yt:"alternating+hammer+curl+dumbbell+how+to"},
+        {name:"Skull Crusher EZ Bar",                     sets:4,reps:{1:"12",2:"12-15",3:"15"},        note:"Slow lower to forehead, full extension — tricep mass and shape", yt:"skull+crusher+ez+bar+tricep+how+to"},
+        {name:"Tricep Dip Machine",                       sets:3,reps:{1:"12-15",2:"15",3:"15-20"},     note:"Squeeze at lockout — outer tricep head that creates arm definition from front", yt:"tricep+dip+machine+exercise"},
+      ]},
+      {label:"Core Circuit",type:"core",exercises:[
+        {name:"Dragon Flag",                              sets:3,reps:{1:"5-6",2:"6-8",3:"8-10"},      note:"The hardest core exercise — entire spine and core under load. Full body tension", yt:"dragon+flag+exercise+how+to+tutorial"},
+        {name:"Lying Leg Raise",                          sets:3,reps:{1:"15",2:"18",3:"20"},           note:"Lower back pressed to bench — lower abs hit hardest here", yt:"lying+leg+raise+lower+abs+exercise"},
+        {name:"Russian Twist",                            sets:3,reps:{1:"20",2:"24",3:"30"},           note:"Feet raised, slow rotation — oblique lines visible at 12% body fat", yt:"russian+twist+abs+exercise+how+to"},
+      ]},
+    ]
+  },
+  {
+    day:"Fri", focus:"Legs + Core", tags:["strength","core","cardio"],
+    blocks:[
+      {label:"Legs — Athletic Not Bulky",type:"strength",exercises:[
+        {name:"Leg Press 45 Degree",     priority:true,  sets:4,reps:{1:"10-12",2:"12-15",3:"15-20"}, note:"Athletic quads not powerlifter quads — moderate weight, full range of motion", yt:"45+degree+leg+press+machine+how+to"},
+        {name:"Bulgarian Split Squat DB",                 sets:3,reps:{1:"10 each",2:"12 each",3:"12 each"},note:"Unilateral — proportional quad and glute development, better than bilateral for aesthetics", yt:"bulgarian+split+squat+dumbbell+tutorial"},
+        {name:"Lying Leg Curl Machine",                   sets:4,reps:{1:"10-12",2:"12-15",3:"15"},    note:"Hamstring sweep — creates the lean leg look when walking. Pause at full curl.", yt:"lying+leg+curl+machine+hamstring+exercise"},
+        {name:"Hip Thrust Machine",                       sets:3,reps:{1:"12-15",2:"15",3:"15-20"},    note:"Glute definition — squeeze hard at top for 1 full second every rep", yt:"hip+thrust+machine+glutes+exercise"},
+        {name:"Leg Extension Machine",                    sets:3,reps:{1:"15",2:"18",3:"20"},           note:"Quad isolation and definition — 4 sec eccentric in Phase 3", yt:"leg+extension+machine+quad+how+to"},
+        {name:"Seated Calf Raise",                        sets:4,reps:{1:"15-20",2:"20",3:"20-25"},    note:"Full stretch at bottom, hard squeeze at top — calves complete the lean athletic leg", yt:"seated+calf+raise+machine+exercise"},
+      ]},
+      {label:"Core Circuit",type:"core",exercises:[
+        {name:"Cable Woodchop High-Low",                  sets:3,reps:{1:"12 each",2:"15 each",3:"15 each"},note:"Rotational power — obliques and transverse abs. The Lee Pace oblique line", yt:"cable+woodchop+high+to+low+core+exercise"},
+        {name:"Ab Wheel Rollout",                         sets:3,reps:{1:"8-10",2:"10-12",3:"12-15"},  note:"Brace hard — full extension works serratus and lats simultaneously", yt:"ab+wheel+rollout+exercise+how+to"},
+        {name:"Plank Hip Dip",                            sets:3,reps:{1:"14",2:"16",3:"20"},           note:"7–10 each side — oblique stability burn with a plank foundation", yt:"plank+hip+dip+oblique+exercise"},
+      ]},
+      {label:"Cardio",type:"cardio",exercises:[
+        {name:"Stationary Bike HIIT",                     sets:1,reps:{1:"20 min",2:"20 min",3:"25 min"},note:"30s hard / 90s easy x 8 rounds — maximises fat oxidation, zero muscle loss", yt:"stationary+bike+HIIT+interval+training"},
+      ]},
+    ]
+  },
+  {
+    day:"Sat", focus:"Full Body + Serratus + HIIT", tags:["strength","core","cardio"],
+    blocks:[
+      {label:"Full Body Strength",type:"strength",exercises:[
+        {name:"Neutral-Grip Lat Pulldown",priority:true, sets:4,reps:{1:"10-12",2:"12-15",3:"15"},     note:"Lat width finisher for the week — neutral grip allows greater range of motion", yt:"neutral+grip+lat+pulldown+exercise"},
+        {name:"Cable Pull-Through",                       sets:3,reps:{1:"12-15",2:"15",3:"15-20"},     note:"Hip hinge posterior chain — replaces deadlift, same glute/ham stimulus", yt:"cable+pull+through+glutes+hamstrings"},
+        {name:"DB Lateral Raise",                         sets:4,reps:{1:"15-20",2:"20",3:"20-25"},     note:"Second shoulder session — frequency is what builds the shoulder cap", yt:"dumbbell+lateral+raise+shoulder+tutorial"},
+        {name:"Flat DB Fly",                              sets:3,reps:{1:"12-15",2:"15",3:"15-20"},     note:"Chest stretch focus — full pec length under tension", yt:"flat+dumbbell+fly+chest+exercise"},
+      ]},
+      {label:"Serratus + Core Finisher",type:"core",exercises:[
+        {name:"Serratus Punch (Cable)",  priority:true,  sets:3,reps:{1:"15",2:"18",3:"20"},            note:"SERRATUS — punch forward at shoulder height, protract fully. The visible ribcage line", yt:"serratus+anterior+punch+cable+exercise"},
+        {name:"Hollow Body Hold",                         sets:3,reps:{1:"25 sec",2:"35 sec",3:"45 sec"},note:"Lower back flush to floor — full core under tension, serratus activated", yt:"hollow+body+hold+core+exercise"},
+        {name:"Oblique Crunch Machine",                   sets:3,reps:{1:"15 each",2:"15 each",3:"18 each"},note:"Side-to-side — the oblique lines that run diagonally across the abs", yt:"oblique+crunch+machine+exercise"},
+        {name:"Hanging Knee Raise",                       sets:3,reps:{1:"12",2:"15",3:"18"},           note:"Tuck knees to chest — lower abs, controlled with full hang", yt:"hanging+knee+raise+abs+exercise+tutorial"},
+      ]},
+      {label:"HIIT Cardio",type:"cardio",exercises:[
+        {name:"Stationary Bike Intervals",                sets:1,reps:{1:"20 min",2:"25 min",3:"25 min"},note:"Phase 1: 40s/80s x7 · Phase 2: 35s/70s x8 · Phase 3: 30s/60s x9 — progressive intensity", yt:"stationary+bike+HIIT+interval+training"},
+      ]},
+    ]
+  }
+];
+
+function lk(d,bi,ei,p,w,s){return d+"-"+bi+"-"+ei+"-p"+p+"-w"+w+"-s"+s;}
+function dk(d,bi,ei){return d+"-"+bi+"-"+ei;}
+
+function showView(v){
+  document.querySelectorAll('.view').forEach(function(el){el.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(el){el.classList.remove('active');});
+  document.getElementById('view-'+v).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+function switchPhase(p){
+  currentPhase=parseInt(p);
+  document.getElementById('phaseSel').value=p;
+  [1,2,3].forEach(function(i){
+    var b=document.getElementById('pbtn-'+i);
+    if(b){b.classList.toggle('active',i===currentPhase);}
+  });
+  renderWorkout();
+}
+
+function switchWeek(w){
+  currentWeek=parseInt(w);
+  renderWorkout();
+}
+
+function renderWorkout(){
+  var ph=PHASES[currentPhase];
+  document.getElementById('phase-desc-box').innerHTML=
+    '<div class="phase-desc">'+
+      '<div class="pd-item"><div class="pd-label">Phase '+currentPhase+' Goal</div><div class="pd-val">'+ph.name+'</div><div class="pd-sub">'+ph.goal+'</div></div>'+
+      '<div class="pd-item"><div class="pd-label">Rep Scheme</div><div class="pd-val">'+ph.reps.split('/')[0].trim()+'</div><div class="pd-sub">'+ph.reps.split('/').slice(1).join('/').trim()+'</div></div>'+
+      '<div class="pd-item"><div class="pd-label">Cardio</div><div class="pd-val">'+ph.cardio.split('(')[0].trim()+'</div><div class="pd-sub">'+(ph.cardio.split('(')[1]||'').replace(')','')+'</div></div>'+
+    '</div>';
+  document.getElementById('overload-box').innerHTML=
+    '<div class="overload-box"><strong>Progressive Overload — Phase '+currentPhase+'</strong><br>'+ph.overload+'</div>';
+  document.getElementById('workout-content').innerHTML=DAYS.map(function(d){return renderDay(d);}).join('');
+  updateAllProgress();
+}
+
+function renderDay(dayObj){
+  var tagHtml=dayObj.tags.map(function(t){return '<span class="tag tg-'+t+'">'+t+'</span>';}).join('');
+  var blocksHtml=dayObj.blocks.map(function(b,bi){return renderBlock(dayObj.day,bi,b);}).join('');
+  var dc=dayColors[dayObj.day]||'#e9e6e1';
+  return '<section class="day-section" id="sec-'+dayObj.day+'">'+
+    '<div class="day-hdr">'+
+      '<div class="day-lbl" style="color:'+dc+'">'+dayObj.day+'</div>'+
+      '<div class="day-focus-txt">'+dayObj.focus+'</div>'+
+      '<div class="tags">'+tagHtml+'</div>'+
+      '<div class="day-prog" id="prog-'+dayObj.day+'"></div>'+
+    '</div>'+blocksHtml+'</section>';
+}
+
+var dayColors={Mon:'#5f8ec9',Tue:'#4aad7a',Wed:'#c9a96e',Thu:'#a07bbe',Fri:'#c96e6e',Sat:'#6eadc9'};
+
+function renderBlock(day,bi,block){
+  var cls='bh-'+block.type;
+  var cardsHtml=block.exercises.map(function(ex,ei){return renderCard(day,bi,ei,ex,block.type);}).join('');
+  return '<div class="block-hdr '+cls+'">'+block.label+'</div>'+cardsHtml;
+}
+
+function renderCard(day,bi,ei,ex,type){
+  var k=dk(day,bi,ei);
+  var done=cardDone[k]||false;
+  var isCore=type==='core';
+  var isCardio=type==='cardio';
+  var repVal=typeof ex.reps==='object'?ex.reps[currentPhase]:ex.reps;
+  var setsHtml='';
+  for(var s=0;s<ex.sets;s++){
+    var logKey=lk(day,bi,ei,currentPhase,currentWeek,s);
+    var log=logData[logKey]||{};
+    var logged=log.done?'logged':'';
+    var strokeClr=log.done?'#fff':'#2e2c29';
+    if(isCardio){
+      setsHtml+='<div class="srow cardio-row">'+
+        '<div class="snum">S'+(s+1)+'</div>'+
+        '<input class="sinput" type="text" placeholder="pace / notes" value="'+(log.kg||'')+'" oninput="sl(\''+day+'\','+bi+','+ei+','+s+',\'kg\',this.value)"/>'+
+        '<button class="sdone '+logged+'" onclick="ts(\''+day+'\','+bi+','+ei+','+s+',this)"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="'+strokeClr+'" stroke-width="2"><polyline points="2,6 5,9 10,3"/></svg></button>'+
+      '</div>';
+    } else {
+      setsHtml+='<div class="srow">'+
+        '<div class="snum">S'+(s+1)+'</div>'+
+        '<input class="sinput" type="text" placeholder="kg" value="'+(log.kg||'')+'" oninput="sl(\''+day+'\','+bi+','+ei+','+s+',\'kg\',this.value)"/>'+
+        '<input class="sinput" type="text" placeholder="reps" value="'+(log.reps||'')+'" oninput="sl(\''+day+'\','+bi+','+ei+','+s+',\'reps\',this.value)"/>'+
+        '<button class="sdone '+logged+'" onclick="ts(\''+day+'\','+bi+','+ei+','+s+',this)"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="'+strokeClr+'" stroke-width="2"><polyline points="2,6 5,9 10,3"/></svg></button>'+
+      '</div>';
+    }
+  }
+  var histHtml='';
+  for(var wi=0;wi<4;wi++){
+    var wk=wi+1;var summary='';
+    for(var si=0;si<ex.sets;si++){var d=logData[lk(day,bi,ei,currentPhase,wk,si)];if(d&&d.kg){summary=d.kg;break;}}
+    histHtml+='<div class="hcell '+(summary?'hd':'')+'"><div class="hw">Wk '+wk+'</div><div class="hv">'+(summary||'—')+'</div></div>';
+  }
+  var ytUrl='https://www.youtube.com/results?search_query='+encodeURIComponent(ex.yt.replace(/\+/g,' '));
+  var pbadge=ex.priority?'<span class="priority-badge">Priority</span>':'';
+  var mpCls=isCore?'mp-c':isCardio?'mp-c':'mp-r';
+  return '<div class="xcard '+(done?'done ':'')+(isCore?'core-card ':'')+'" id="card-'+day+'-'+bi+'-'+ei+'">'+
+    '<div class="ctop" onclick="tc(\''+day+'\','+bi+','+ei+')">'+
+      '<div class="chk" onclick="event.stopPropagation();td(\''+day+'\','+bi+','+ei+')"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="2,7 6,11 12,3"/></svg></div>'+
+      '<div class="xinfo"><div class="xname">'+ex.name+pbadge+'</div><div class="xnote">'+ex.note+'</div></div>'+
+      '<div class="xmeta"><span class="mp mp-s">'+ex.sets+(ex.sets>1?' sets':' set')+'</span><span class="mp '+mpCls+'">'+repVal+'</span></div>'+
+      '<button class="xbtn" onclick="event.stopPropagation();tc(\''+day+'\','+bi+','+ei+')">Log +</button>'+
+    '</div>'+
+    '<div class="cbody" id="body-'+day+'-'+bi+'-'+ei+'">'+
+      '<div class="demo-panel">'+
+        '<div class="gif-box"><a href="'+ytUrl+'" target="_blank">'+
+          '<div class="play-ring"><svg width="13" height="13" viewBox="0 0 24 24" fill="#c9a96e"><polygon points="6,3 20,12 6,21"/></svg></div>'+
+          '<div class="demo-lbl">Watch Demo</div>'+
+          '<div style="font-size:9px;color:var(--muted);text-align:center;line-height:1.3">'+ex.name+'</div>'+
+          '<div class="demo-sub">Opens YouTube</div>'+
+        '</a></div>'+
+      '</div>'+
+      '<div class="log-panel">'+
+        '<div class="log-wlbl">Phase '+currentPhase+' — Week '+currentWeek+' — Target: '+repVal+'</div>'+
+        '<div class="sets-col">'+setsHtml+'</div>'+
+        '<div class="hist-row"><div class="hist-lbl">History — Phase '+currentPhase+'</div><div class="hgrid">'+histHtml+'</div></div>'+
+      '</div>'+
+    '</div>'+
+  '</div>';
+}
+
+function tc(day,bi,ei){var b=document.getElementById('body-'+day+'-'+bi+'-'+ei);if(b)b.classList.toggle('open');}
+function td(day,bi,ei){
+  var k=dk(day,bi,ei);cardDone[k]=!cardDone[k];
+  var card=document.getElementById('card-'+day+'-'+bi+'-'+ei);if(!card)return;
+  if(cardDone[k])card.classList.add('done');else card.classList.remove('done');
+  var nm=card.querySelector('.xname');if(nm){nm.style.textDecoration=cardDone[k]?'line-through':'';nm.style.color=cardDone[k]?'var(--muted)':'';}
+  var cc=card.querySelector('.chk');
+  if(cc){var isCore=card.classList.contains('core-card');cc.style.background=cardDone[k]?(isCore?'var(--gold)':'var(--green)'):'';cc.style.borderColor=cardDone[k]?(isCore?'var(--gold)':'var(--green)'):'';cc.querySelector('svg').style.opacity=cardDone[k]?'1':'0';}
+  updateAllProgress();
+}
+function ts(day,bi,ei,s,btn){
+  var k=lk(day,bi,ei,currentPhase,currentWeek,s);if(!logData[k])logData[k]={};
+  logData[k].done=!logData[k].done;btn.classList.toggle('logged');
+  var svg=btn.querySelector('svg');if(svg)svg.setAttribute('stroke',logData[k].done?'#fff':'#2e2c29');
+}
+function sl(day,bi,ei,s,field,val){
+  var k=lk(day,bi,ei,currentPhase,currentWeek,s);if(!logData[k])logData[k]={};logData[k][field]=val;
+}
+function countAll(dayObj){var n=0;dayObj.blocks.forEach(function(b){n+=b.exercises.length;});return n;}
+function updateAllProgress(){
+  DAYS.forEach(function(dayObj){
+    var total=countAll(dayObj);var done=0;
+    dayObj.blocks.forEach(function(b,bi){b.exercises.forEach(function(ex,ei){if(cardDone[dk(dayObj.day,bi,ei)])done++;});});
+    var el=document.getElementById('prog-'+dayObj.day);
+    if(el)el.innerHTML='<span class="done-n">'+done+'</span> / '+total+' done';
+  });
+}
+
+function buildNav(){
+  document.getElementById('tabBar').innerHTML=
+    '<button class="tab-btn active" onclick="showView(\'workout\')">Workout</button>'+
+    '<button class="tab-btn" onclick="showView(\'nutrition\')">Nutrition</button>'+
+    '<button class="tab-btn" onclick="showView(\'progress\')">Progress</button>'+
+    DAYS.map(function(d){return '<a class="tab-btn" href="#sec-'+d.day+'" onclick="document.querySelectorAll(\'.view\').forEach(function(el){el.classList.remove(\'active\');});document.getElementById(\'view-workout\').classList.add(\'active\');">'+d.day+'</a>';}).join('');
+}
+
+buildNav();
+renderWorkout();
+</script>
+</body>
+</html>
